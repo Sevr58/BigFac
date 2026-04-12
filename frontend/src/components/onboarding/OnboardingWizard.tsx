@@ -29,6 +29,7 @@ export function OnboardingWizard() {
   const [step, setStep] = useState(0);
   const [data, setData] = useState<Partial<OnboardingData>>({});
   const [loading, setLoading] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const next = (patch: Partial<OnboardingData>) => {
     const updated = { ...data, ...patch };
@@ -59,6 +60,7 @@ export function OnboardingWizard() {
       router.push("/strategy");
     } catch {
       setLoading(false);
+      setSubmitError("Не удалось создать воркспейс. Попробуйте ещё раз.");
     }
   };
 
@@ -76,6 +78,7 @@ export function OnboardingWizard() {
         ))}
       </div>
 
+      {submitError && <p className="text-sm text-red-500 mb-4 text-center">{submitError}</p>}
       <div className="bg-slate-900 border border-slate-800 rounded-xl p-8">
         {step === 0 && <StepCompanyType onNext={next} />}
         {step === 1 && <StepBrandProfile onNext={next} />}

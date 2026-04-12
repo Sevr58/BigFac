@@ -23,7 +23,7 @@ export default function StrategyPage() {
       setPillars(p.data);
       setPlan(pl.data);
     }).finally(() => setLoading(false));
-  }, [ws]);
+  }, [ws?.id]);
 
   const regenerate = async () => {
     if (!ws) return;

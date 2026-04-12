@@ -22,13 +22,17 @@ export default function BrandPage() {
 
   const save = async () => {
     if (!ws) return;
-    const res = await api.patch(`/workspaces/${ws.id}/brand`, {
-      description: form.description,
-      target_audience: form.target_audience,
-      tone_of_voice: form.tone_of_voice,
-    });
-    setBrand(res.data);
-    setEditing(false);
+    try {
+      const res = await api.patch(`/workspaces/${ws.id}/brand`, {
+        description: form.description,
+        target_audience: form.target_audience,
+        tone_of_voice: form.tone_of_voice,
+      });
+      setBrand(res.data);
+      setEditing(false);
+    } catch {
+      // Keep editing mode open on error
+    }
   };
 
   if (!brand) return <p className="text-slate-400">Загрузка...</p>;

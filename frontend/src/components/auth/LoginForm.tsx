@@ -23,8 +23,10 @@ export function LoginForm() {
       const userRes = await api.get("/auth/me", { headers: { Authorization: `Bearer ${token}` } });
       setAuth(userRes.data, token);
       router.push("/");
-    } catch {
-      setError("root", { message: "Неверный email или пароль" });
+    } catch (err: unknown) {
+      const axiosErr = err as { response?: { status?: number } };
+      const msg = axiosErr.response?.status === 401 ? "Неверный email или пароль" : "Ошибка входа. Попробуйте позже";
+      setError("root", { message: msg });
     }
   };
 

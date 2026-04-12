@@ -15,6 +15,7 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       token: null,
       setAuth: (user, token) => {
+        // Write to "access_token" key so api.ts interceptor can read it
         localStorage.setItem("access_token", token);
         set({ user, token });
       },
