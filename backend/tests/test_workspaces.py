@@ -36,3 +36,38 @@ def test_invite_member(auth_client, client):
     })
     assert response.status_code == 201
     assert response.json()["role"] == "editor"
+
+def test_invite_member_forbidden_for_non_owner(client):
+    """An editor cannot invite members — only owners can."""
+    # Create owner and workspace
+    client.post("/api/v1/auth/register", json={
+        "email": "owner2@example.com", "password": "pass123", "full_name": "Owner"
+    })
+    token = client.post("/api/v1/auth/login", json={
+        "email": "owner2@example.com", "password": "pass123"
+    }).json()["access_token"]
+    client.headers["Authorization"] = f"Bearer {token}"
+    ws = client.post("/api/v1/workspaces/", json={"name": "WS"}).json()
+
+    # Register editor and add as member
+    client.post("/api/v1/auth/register", json={
+        "email": "editor2@example.com", "password": "pass123", "full_name": "Editor"
+    })
+    client.post(f"/api/v1/workspaces/{ws['id']}/members", json={
+        "email": "editor2@example.com", "role": "editor"
+    })
+
+    # Login as editor
+    editor_token = client.post("/api/v1/auth/login", json={
+        "email": "editor2@example.com", "password": "pass123"
+    }).json()["access_token"]
+    client.headers["Authorization"] = f"Bearer {editor_token}"
+
+    # Try to invite another user as editor — should be 403
+    client.post("/api/v1/auth/register", json={
+        "email": "third@example.com", "password": "pass123", "full_name": "Third"
+    })
+    response = client.post(f"/api/v1/workspaces/{ws['id']}/members", json={
+        "email": "third@example.com", "role": "editor"
+    })
+    assert response.status_code == 403

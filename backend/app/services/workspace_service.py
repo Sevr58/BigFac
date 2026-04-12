@@ -18,6 +18,9 @@ def list_workspaces(db: Session, user_id: int) -> list[tuple[Workspace, Workspac
     return [(m.workspace, m) for m in members]
 
 def add_member(db: Session, workspace_id: int, email: str, role: UserRole) -> WorkspaceMember:
+    workspace = db.query(Workspace).filter(Workspace.id == workspace_id).first()
+    if not workspace:
+        raise HTTPException(status_code=404, detail="Workspace not found")
     user = db.query(User).filter(User.email == email).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")

@@ -1,8 +1,10 @@
-from pydantic import BaseModel
+from typing import Annotated
+from pydantic import BaseModel, Field
+from pydantic import StringConstraints
 from app.models.user import UserRole
 
 class WorkspaceCreate(BaseModel):
-    name: str
+    name: Annotated[str, StringConstraints(min_length=1, strip_whitespace=True)]
 
 class WorkspaceOut(BaseModel):
     id: int
