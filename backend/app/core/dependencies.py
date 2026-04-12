@@ -18,7 +18,7 @@ def get_current_user(
 ) -> User:
     try:
         user_id = decode_token(credentials.credentials)
-    except JWTError:
+    except (JWTError, KeyError, ValueError):
         raise HTTPException(status_code=401, detail="Invalid token")
     user = db.query(User).filter(User.id == user_id).first()
     if not user:

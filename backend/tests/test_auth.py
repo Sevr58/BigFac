@@ -8,6 +8,7 @@ def test_register_success(client):
     data = response.json()
     assert data["email"] == "test@example.com"
     assert "hashed_password" not in data
+    assert "access_token" not in data
 
 def test_register_duplicate_email(client):
     payload = {"email": "test@example.com", "password": "pass123", "full_name": "User"}
