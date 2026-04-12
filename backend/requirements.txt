@@ -12,3 +12,9 @@ anthropic==0.40.0
 python-multipart==0.0.12
 pytest==8.3.3
 pytest-asyncio==0.24.0
+celery[redis]==5.4.0
+boto3==1.35.0
+openai==1.51.0
+scenedetect[opencv]==0.6.4
+ffmpeg-python==0.2.0
+tavily-python==0.5.0
