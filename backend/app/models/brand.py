@@ -28,6 +28,9 @@ class Brand(Base):
     social_accounts: Mapped[list["SocialAccount"]] = relationship(back_populates="brand")
     pillars: Mapped[list["ContentPillar"]] = relationship(back_populates="brand")
     plan_items: Mapped[list["ContentPlanItem"]] = relationship(back_populates="brand")
+    assets: Mapped[list["SourceAsset"]] = relationship(back_populates="brand")
+    drafts: Mapped[list["Draft"]] = relationship(back_populates="brand")
+    human_tasks: Mapped[list["HumanTask"]] = relationship(back_populates="brand")
 
 class SocialAccount(Base):
     __tablename__ = "social_accounts"

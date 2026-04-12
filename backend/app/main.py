@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1.router import router
+from app.models import content  # noqa: F401 — registers Phase 2 models
 
 app = FastAPI(title="Social Content Factory", version="0.1.0")
 
