@@ -1,4 +1,5 @@
 import json
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from app.config import settings
 from app.models.brand import Brand
@@ -25,7 +26,12 @@ def call_claude(prompt: str) -> dict:
     # Extract JSON from response
     start = text.find("{")
     end = text.rfind("}") + 1
-    return json.loads(text[start:end])
+    if start == -1 or end == 0:
+        raise HTTPException(status_code=502, detail="AI response did not contain JSON")
+    try:
+        return json.loads(text[start:end])
+    except json.JSONDecodeError as e:
+        raise HTTPException(status_code=502, detail=f"AI response parsing failed: {e}")
 
 def build_strategy_prompt(brand: Brand) -> str:
     from datetime import date, timedelta
@@ -98,7 +104,8 @@ def generate_strategy(db: Session, workspace_id: int) -> dict:
     db.flush()
 
     for item in data["plan_items"]:
-        pillar_id = pillars[item["pillar_index"]].id if item.get("pillar_index") is not None else None
+        idx = item.get("pillar_index")
+        pillar_id = pillars[idx].id if idx is not None and 0 <= idx < len(pillars) else None
         db.add(ContentPlanItem(
             brand_id=brand.id,
             pillar_id=pillar_id,
