@@ -20,6 +20,7 @@ class BrandCreate(BaseModel):
 
 class BrandUpdate(BaseModel):
     name: str | None = None
+    company_type: str | None = None
     description: str | None = None
     target_audience: str | None = None
     goals: list[str] | None = None
