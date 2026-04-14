@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api.v1 import auth, workspaces, brands, strategy, assets, drafts, approvals
+from app.api.v1 import auth, workspaces, brands, strategy, assets, drafts, approvals, human_tasks
 
 router = APIRouter()
 router.include_router(auth.router, prefix="/auth", tags=["auth"])
@@ -9,3 +9,4 @@ router.include_router(strategy.router, prefix="/strategy", tags=["strategy"])
 router.include_router(assets.router)
 router.include_router(drafts.router)
 router.include_router(approvals.router)
+router.include_router(human_tasks.router)
