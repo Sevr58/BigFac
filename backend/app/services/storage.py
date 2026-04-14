@@ -38,11 +38,14 @@ class StorageService:
 
     def exists(self, key: str) -> bool:
         if self.backend == "s3":
+            from botocore.exceptions import ClientError
             try:
                 self._s3.head_object(Bucket=self._bucket, Key=key)
                 return True
-            except Exception:
-                return False
+            except ClientError as e:
+                if e.response["Error"]["Code"] == "404":
+                    return False
+                raise
         else:
             return os.path.exists(os.path.join(self._root, key))
 
