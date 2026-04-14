@@ -44,3 +44,63 @@ export interface ContentPlanItem {
   topic: string;
   planned_date: string;
 }
+
+// Phase 2 types
+
+export interface SourceAsset {
+  id: number;
+  brand_id: number;
+  name: string;
+  asset_type: "video" | "audio" | "image" | "text";
+  status: "uploaded" | "processing" | "ready" | "failed";
+  storage_key: string;
+  file_size: number | null;
+  duration_seconds: number | null;
+  transcription: string | null;
+  tags: string[];
+}
+
+export interface ContentAtom {
+  id: number;
+  source_asset_id: number;
+  atom_type: "hook" | "key_point" | "quote" | "cta" | "story" | "clip";
+  content: string;
+  clip_start: number | null;
+  clip_end: number | null;
+  clip_key: string | null;
+}
+
+export type DraftStatus =
+  | "draft"
+  | "needs_review"
+  | "approved"
+  | "rejected"
+  | "scheduled"
+  | "publishing"
+  | "published"
+  | "failed"
+  | "archived";
+
+export interface Draft {
+  id: number;
+  brand_id: number;
+  network: string;
+  format: string;
+  funnel_stage: string;
+  status: DraftStatus;
+  text: string | null;
+  hashtags: string[];
+  media_keys: string[];
+  source_asset_id: number | null;
+}
+
+export interface HumanTask {
+  id: number;
+  brand_id: number;
+  title: string;
+  description: string | null;
+  status: "pending" | "in_progress" | "completed" | "cancelled";
+  result_asset_id: number | null;
+  created_at: string;
+  completed_at: string | null;
+}
