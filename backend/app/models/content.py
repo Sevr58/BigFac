@@ -1,5 +1,6 @@
 import enum
 from datetime import datetime
+from typing import Optional
 from sqlalchemy import String, Text, DateTime, ForeignKey, Enum, JSON, Integer, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
@@ -45,6 +46,11 @@ class HumanTaskStatus(str, enum.Enum):
     in_progress = "in_progress"
     completed = "completed"
     cancelled = "cancelled"
+
+
+class ApprovalDecision(str, enum.Enum):
+    approved = "approved"
+    rejected = "rejected"
 
 
 class SourceAsset(Base):
@@ -106,6 +112,7 @@ class Draft(Base):
     source_asset: Mapped["SourceAsset"] = relationship(back_populates="drafts")
     versions: Mapped[list["DraftVersion"]] = relationship(back_populates="draft")
     approval_requests: Mapped[list["ApprovalRequest"]] = relationship(back_populates="draft")
+    human_tasks: Mapped[list["HumanTask"]] = relationship(back_populates="draft")
 
 
 class DraftVersion(Base):
@@ -127,12 +134,13 @@ class ApprovalRequest(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     draft_id: Mapped[int] = mapped_column(ForeignKey("drafts.id"), nullable=False)
     reviewer_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
-    decision: Mapped[str] = mapped_column(String(20), nullable=True)
+    decision: Mapped[ApprovalDecision] = mapped_column(Enum(ApprovalDecision), nullable=True)
     comment: Mapped[str] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     decided_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
 
     draft: Mapped["Draft"] = relationship(back_populates="approval_requests")
+    reviewer: Mapped[Optional["User"]] = relationship(foreign_keys=[reviewer_id])
 
 
 class HumanTask(Base):
@@ -150,3 +158,6 @@ class HumanTask(Base):
     completed_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
 
     brand: Mapped["Brand"] = relationship(back_populates="human_tasks")
+    draft: Mapped[Optional["Draft"]] = relationship(back_populates="human_tasks")
+    result_asset: Mapped[Optional["SourceAsset"]] = relationship(foreign_keys=[result_asset_id])
+    assignee: Mapped[Optional["User"]] = relationship(foreign_keys=[assignee_id])
