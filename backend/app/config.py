@@ -19,6 +19,10 @@ class Settings(BaseSettings):
     s3_access_key: str = ""
     s3_secret_key: str = ""
 
+    # Phase 3 — used as defaults if not in SocialAccount.credentials
+    telegram_bot_token: str = ""
+    yandex_metrica_counter_id: str = ""
+
     class Config:
         env_file = ".env"
 
