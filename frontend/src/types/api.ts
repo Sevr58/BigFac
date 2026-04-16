@@ -104,3 +104,67 @@ export interface HumanTask {
   created_at: string;
   completed_at: string | null;
 }
+
+// Phase 3 types
+
+export interface DraftQueue {
+  id: number;
+  brand_id: number;
+  network: string;
+  format: string;
+  funnel_stage: string;
+  status: DraftStatus;
+  text: string | null;
+  scheduled_at: string | null;
+}
+
+export interface PublishedPost {
+  id: number;
+  draft_id: number;
+  brand_id: number;
+  network: string;
+  network_post_id: string | null;
+  utm_params: Record<string, string>;
+  error: string | null;
+  published_at: string;
+}
+
+export interface PostMetrics {
+  views: number | null;
+  likes: number | null;
+  comments: number | null;
+  shares: number | null;
+  reach: number | null;
+  saves: number | null;
+  clicks: number | null;
+}
+
+export interface PostAnalyticsItem {
+  id: number;
+  draft_id: number;
+  network: string;
+  network_post_id: string | null;
+  published_at: string;
+  utm_params: Record<string, string>;
+  metrics: PostMetrics | null;
+}
+
+export interface LeadEvent {
+  id: number;
+  brand_id: number;
+  published_post_id: number | null;
+  event_type: string;
+  utm_source: string | null;
+  utm_medium: string | null;
+  utm_campaign: string | null;
+  utm_content: string | null;
+}
+
+export interface AnalyticsSummary {
+  total_posts: number;
+  total_views: number;
+  total_leads: number;
+  by_network: Record<string, { total_posts: number; views: number; likes: number; shares: number }>;
+  by_format: Record<string, { total_posts: number; views: number }>;
+  by_funnel: Record<string, { total_posts: number }>;
+}
