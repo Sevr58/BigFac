@@ -31,6 +31,9 @@ class Brand(Base):
     assets: Mapped[list["SourceAsset"]] = relationship(back_populates="brand")
     drafts: Mapped[list["Draft"]] = relationship(back_populates="brand")
     human_tasks: Mapped[list["HumanTask"]] = relationship(back_populates="brand")
+    published_posts: Mapped[list["PublishedPost"]] = relationship(back_populates="brand")
+    metrics: Mapped[list["PostMetrics"]] = relationship(back_populates="brand")
+    lead_events: Mapped[list["LeadEvent"]] = relationship(back_populates="brand")
 
 class SocialAccount(Base):
     __tablename__ = "social_accounts"
@@ -40,5 +43,6 @@ class SocialAccount(Base):
     network: Mapped[NetworkType] = mapped_column(Enum(NetworkType), nullable=False)
     handle: Mapped[str] = mapped_column(String(255), nullable=True)
     enabled: Mapped[bool] = mapped_column(default=True)
+    credentials: Mapped[dict] = mapped_column(JSON, default=dict)
 
     brand: Mapped["Brand"] = relationship(back_populates="social_accounts")

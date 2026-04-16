@@ -113,6 +113,7 @@ class Draft(Base):
     versions: Mapped[list["DraftVersion"]] = relationship(back_populates="draft")
     approval_requests: Mapped[list["ApprovalRequest"]] = relationship(back_populates="draft")
     human_tasks: Mapped[list["HumanTask"]] = relationship(back_populates="draft")
+    published_posts: Mapped[list["PublishedPost"]] = relationship(back_populates="draft")
 
 
 class DraftVersion(Base):
